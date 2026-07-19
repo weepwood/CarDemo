@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Camera,
   ChevronLeft,
@@ -47,11 +47,11 @@ export default function App() {
   const car = cars[carIndex]
   const style = useMemo(() => styleModes.find((item) => item.id === mode), [mode])
 
-  const changeCar = (direction) => {
+  const changeCar = useCallback((direction) => {
     setCarIndex((current) => (current + direction + cars.length) % cars.length)
     setColorIndex(0)
     setView('hero')
-  }
+  }, [])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -66,7 +66,7 @@ export default function App() {
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [changeCar])
 
   return (
     <main className={`app-shell mode-${mode} ${night ? 'is-night' : 'is-day'}`} style={{ '--accent': car.accent }}>
